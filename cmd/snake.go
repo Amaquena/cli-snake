@@ -23,12 +23,12 @@ const (
 
 type node struct {
 	body     rune
-	position position
+	position Position
 	next     *node
 	prev     *node
 }
 
-type position struct {
+type Position struct {
 	x, y int
 }
 
@@ -41,7 +41,7 @@ type Snake struct {
 	status           Status
 }
 
-func NewSnake(pos position) *Snake {
+func NewSnake(pos Position) *Snake {
 	newHead := &node{
 		body:     '@',
 		next:     nil,
@@ -80,26 +80,44 @@ func (s *Snake) updateSnakePosition(direction Direction) {
 }
 
 func (s *Snake) displaySnake(scr tcell.Screen) {
-	head := s.head
+	head := s.tail
 	for head != nil {
 		scr.SetContent(head.position.x, head.position.y, head.body, nil, s.style)
-		head = head.prev
+		head = head.next
 	}
 }
 
 func (s *Snake) checkSnakeDeath(boardW, boardH int) {
 	pos := s.head.position
 
+	// check if snake touches the edeges of the board
 	if pos.x == boardW || pos.x == 0 || pos.y == boardH || pos.y == 0 {
 		s.status = DEAD
 	}
 
-	head := s.head
-	for head != nil {
-		if head.position.x == s.head.position.x && head.position.y == s.head.position.y && head != s.head {
-			s.status = DEAD
+	body := s.head
+	for body != nil {
+		if s.currentDirection == RIGHT {
+			if body.position.x == pos.x+1 && body.position.y == pos.y {
+				s.status = DEAD
+			}
 		}
-		head = head.next
+		if s.currentDirection == LEFT {
+			if body.position.x == pos.x-1 && body.position.y == pos.y {
+				s.status = DEAD
+			}
+		}
+		if s.currentDirection == UP {
+			if body.position.x == pos.x && body.position.y == pos.y-1 {
+				s.status = DEAD
+			}
+		}
+		if s.currentDirection == DOWN {
+			if body.position.x == pos.x && body.position.y == pos.y+1 {
+				s.status = DEAD
+			}
+		}
+		body = body.prev
 	}
 }
 
@@ -131,7 +149,7 @@ func (s *Snake) addHead(x, y int) {
 	newHead := &node{
 		body: '@',
 		next: nil,
-		position: position{
+		position: Position{
 			x,
 			y,
 		},
@@ -143,8 +161,6 @@ func (s *Snake) addHead(x, y int) {
 	s.head.next = newHead
 	newHead.prev = s.head
 	s.head = newHead
-
-	s.length++
 }
 
 func (s *Snake) removeTail() {

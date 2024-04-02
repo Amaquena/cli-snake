@@ -50,9 +50,11 @@ func (b *Board) StartScreen(s tcell.Screen) {
 
 func (b *Board) RunningScreen(s tcell.Screen, snake *Snake) {
 	b.displayBoard(s)
-	snake.updateSnakePosition(snake.currentDirection)
-	snake.displaySnake(s)
 	snake.checkSnakeDeath(b.w, b.h)
+	if snake.status == ALIVE {
+		snake.updateSnakePosition(snake.currentDirection)
+	}
+	snake.displaySnake(s)
 }
 
 func (b *Board) GameOverScreen(s tcell.Screen) {

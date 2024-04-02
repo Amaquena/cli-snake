@@ -41,15 +41,15 @@ func NewGame(boardHeight, boardWidth, boardOffsety, boardOffsetx int) *Game {
 		Foreground(tcell.ColorWhite)
 	screen.SetStyle(defStyle)
 
-	snakeStartingPos := position{
-		x: boardWidth / 2,
-		y: (boardHeight / 4) + boardHeight/2,
+	snakeStartingPos := Position{
+		x: boardWidth/2 - 4,
+		y: (boardHeight / 4) + (boardHeight / 2),
 	}
 	snake := NewSnake(snakeStartingPos)
 
-	snake.addHead(snakeStartingPos.x-1, snakeStartingPos.y)
-	snake.addHead(snakeStartingPos.x-2, snakeStartingPos.y)
-	snake.addHead(snakeStartingPos.x-3, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+1, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+2, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+3, snakeStartingPos.y)
 
 	return &Game{
 		done:     make(chan struct{}),
@@ -88,15 +88,15 @@ func (g *Game) Output() {
 }
 
 func (g *Game) Restart() {
-	snakeStartingPos := position{
-		x: g.board.w / 2,
+	snakeStartingPos := Position{
+		x: g.board.w/2 - 4,
 		y: (g.board.h / 4) + g.board.h/2,
 	}
 	snake := NewSnake(snakeStartingPos)
 
-	snake.addHead(snakeStartingPos.x-1, snakeStartingPos.y)
-	snake.addHead(snakeStartingPos.x-2, snakeStartingPos.y)
-	snake.addHead(snakeStartingPos.x-3, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+1, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+2, snakeStartingPos.y)
+	snake.addHead(snakeStartingPos.x+3, snakeStartingPos.y)
 
 	g.state = RUNNING
 	g.snake = snake
