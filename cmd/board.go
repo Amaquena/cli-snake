@@ -35,40 +35,6 @@ func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 	}
 }
 
-func (b *Board) StartScreen(s tcell.Screen) {
-	b.displayBoard(s)
-
-	style := tcell.StyleDefault.Foreground(tcell.ColorWhite.TrueColor()).Background(tcell.ColorReset)
-	title := "CLI Snake"
-	startButtonText := "Enter <CR> - Start Game"
-	Exit := "Escape <ESC> - Exit Game"
-
-	emitStr(s, (b.w-len(title))/2, b.h/2, style, title)
-	emitStr(s, (b.w-len(startButtonText))/2, b.h/2+1, tcell.StyleDefault, startButtonText)
-	emitStr(s, (b.w-len(Exit))/2, b.h/2+2, tcell.StyleDefault, Exit)
-}
-
-func (b *Board) RunningScreen(s tcell.Screen, snake *Snake) {
-	b.displayBoard(s)
-	snake.checkSnakeDeath(b.w, b.h)
-	if snake.status == ALIVE {
-		snake.updateSnakePosition(snake.currentDirection)
-	}
-	snake.displaySnake(s)
-}
-
-func (b *Board) GameOverScreen(s tcell.Screen) {
-	b.displayBoard(s)
-	style := tcell.StyleDefault.Foreground(tcell.ColorOrangeRed.TrueColor()).Background(tcell.ColorReset)
-	GameOverTitle := "GAMEOVER"
-	RestartText := "Enter <CR> - Restart Game"
-	Exit := "Escape <ESC> - Exit Game"
-
-	emitStr(s, (b.w-len(GameOverTitle))/2, b.h/2, style, GameOverTitle)
-	emitStr(s, (b.w-len(RestartText))/2, b.h/2+1, tcell.StyleDefault, RestartText)
-	emitStr(s, (b.w-len(Exit))/2, b.h/2+2, tcell.StyleDefault, Exit)
-}
-
 func (b *Board) DisplayScreenToSmall(s tcell.Screen, currentW, currentH int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorIndianRed.TrueColor()).Background(tcell.Color(tcell.ColorBlack.TrueColor()))
 	displayText := fmt.Sprintf("Current Screen size too small, requird size: %dw x %dh", b.w, b.h)

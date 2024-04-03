@@ -58,24 +58,32 @@ func NewSnake(pos Position) *Snake {
 	}
 }
 
-func (s *Snake) updateSnakePosition(direction Direction) {
+func (s *Snake) updateSnakePositionAndGrow(direction Direction, isAppleEatan bool) {
 	switch direction {
 	case LEFT:
 		// x--
 		s.addHead(s.head.position.x-1, s.head.position.y)
-		s.removeTail()
+		if !isAppleEatan {
+			s.removeTail()
+		}
 	case RIGHT:
 		// x++
 		s.addHead(s.head.position.x+1, s.head.position.y)
-		s.removeTail()
+		if !isAppleEatan {
+			s.removeTail()
+		}
 	case UP:
 		// y--
 		s.addHead(s.head.position.x, s.head.position.y-1)
-		s.removeTail()
+		if !isAppleEatan {
+			s.removeTail()
+		}
 	case DOWN:
 		// y++
 		s.addHead(s.head.position.x, s.head.position.y+1)
-		s.removeTail()
+		if !isAppleEatan {
+			s.removeTail()
+		}
 	}
 }
 
@@ -119,6 +127,14 @@ func (s *Snake) checkSnakeDeath(boardW, boardH int) {
 		}
 		body = body.prev
 	}
+}
+
+func (s *Snake) checkSnakeAteApple(applePosition Position) bool {
+	head := s.head
+	if head.position.x == applePosition.x && head.position.y == applePosition.y {
+		return true
+	}
+	return false
 }
 
 func (s *Snake) changeDirection(direction Direction) {

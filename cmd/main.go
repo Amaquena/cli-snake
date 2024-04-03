@@ -35,14 +35,11 @@ func main() {
 			if game.state == RUNNING {
 				if ev.Key() == tcell.KeyLeft || ev.Rune() == 'a' || ev.Rune() == 'A' {
 					game.snake.changeDirection(LEFT)
-				}
-				if ev.Key() == tcell.KeyRight || ev.Rune() == 'd' || ev.Rune() == 'D' {
+				} else if ev.Key() == tcell.KeyRight || ev.Rune() == 'd' || ev.Rune() == 'D' {
 					game.snake.changeDirection(RIGHT)
-				}
-				if ev.Key() == tcell.KeyUp || ev.Rune() == 'w' || ev.Rune() == 'W' {
+				} else if ev.Key() == tcell.KeyUp || ev.Rune() == 'w' || ev.Rune() == 'W' {
 					game.snake.changeDirection(UP)
-				}
-				if ev.Key() == tcell.KeyDown || ev.Rune() == 's' || ev.Rune() == 'S' {
+				} else if ev.Key() == tcell.KeyDown || ev.Rune() == 's' || ev.Rune() == 'S' {
 					game.snake.changeDirection(DOWN)
 				}
 			}
