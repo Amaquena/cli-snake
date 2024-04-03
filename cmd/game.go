@@ -60,14 +60,13 @@ func NewGame(boardHeight, boardWidth, boardOffsety, boardOffsetx int) *Game {
 		board:    NewBoard(boardHeight, boardWidth, boardOffsety, boardOffsetx),
 		apple:    newApple(boardWidth, boardHeight, boardOffsetx, boardOffsety),
 		score:    0,
-		tickRate: 15,
+		tickRate: 5,
 		state:    START,
 	}
 }
 
 func (g *Game) Output() {
 	w, h := g.screen.Size()
-
 	if w < g.board.w || h < g.board.h {
 		g.board.displayScreenToSmall(g.screen, w, h)
 	} else {
@@ -108,16 +107,18 @@ func (g *Game) RunningScreen() {
 	g.board.displayBoard(g.screen)
 	g.apple.displayApple(g.screen, g.board.w, g.board.h)
 	g.snake.checkSnakeDeath(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
-	isAppleEatan := g.snake.checkSnakeAteApple(g.apple.position)
-	if g.snake.status == ALIVE {
-		g.snake.updateSnakePositionAndGrow(g.snake.currentDirection, isAppleEatan)
-		if isAppleEatan {
-			g.apple.updateApplePosition(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
-			g.score += 10
-		}
-	}
 	g.board.displayScore(g.screen, g.score)
 	g.snake.displaySnake(g.screen)
+	isAppleEatan := g.snake.checkSnakeAteApple(g.apple.position)
+	g.snake.updateSnakePositionAndGrow(g.snake.currentDirection, isAppleEatan)
+	if g.snake.status == DEAD {
+		g.state = GAMEOVER
+	}
+	if isAppleEatan {
+		g.apple.updateApplePosition(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
+		g.score += 10
+		g.adjustDifficulty()
+	}
 }
 
 func (g *Game) GameOverScreen() {
@@ -149,6 +150,18 @@ func (g *Game) Restart() {
 	g.apple.position = newApplePosition(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
 }
 
+func (g *Game) adjustDifficulty() {
+	if g.score == 100 {
+		g.tickRate += 5
+	} else if g.score == 500 {
+		g.tickRate += 5
+	} else if g.score == 750 {
+        g.tickRate += 5
+    } else if g.score == 2000 {
+        g.tickRate += 5
+    }
+}
+
 func (g *Game) gameLooop() {
 	tickInterval := time.Second / time.Duration(g.tickRate)
 
@@ -160,10 +173,8 @@ func (g *Game) gameLooop() {
 			ticker.Stop()
 			return
 		case <-ticker.C:
-			if g.snake.status == DEAD {
-				g.state = GAMEOVER
-			}
 			g.Output()
+			ticker = time.NewTicker(time.Second / time.Duration(g.tickRate))
 		}
 	}
 }
