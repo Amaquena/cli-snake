@@ -10,7 +10,7 @@ func main() {
 	const boardHeight = 30
 	const boardWidth = 50
 	const boardOffsetx = 0
-	const boardOffsety = 0
+	const boardOffsety = 1
 
 	game := NewGame(boardHeight, boardWidth, boardOffsety, boardOffsetx)
 

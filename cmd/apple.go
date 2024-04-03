@@ -13,30 +13,29 @@ type Apple struct {
 	position Position
 }
 
-func newApple(maxWidth, maxHeight int) *Apple {
+func newApple(maxWidth, maxHeight, boardOffsetX, boardOffsetY int) *Apple {
 	return &Apple{
 		style:    tcell.StyleDefault.Foreground(tcell.ColorRed.TrueColor()),
 		symbol:   'a',
 		eatan:    false,
-		position: newApplePosition(maxWidth, maxHeight),
+		position: newApplePosition(maxWidth, maxHeight, boardOffsetX, boardOffsetY),
 	}
 }
 
-func newApplePosition(maxWidth, maxHeight int) Position {
-	min := 1
+func newApplePosition(maxWidth, maxHeight, boardOffsetX, boardOffsetY int) Position {
+	minX := 1 + boardOffsetX 
+    minY := 1 + boardOffsetY
 	maxWidth--
 	maxHeight--
 	return Position{
-		x: rand.Intn(maxWidth-min) + min,
-		y: rand.Intn(maxHeight-min) + min,
+		x: rand.Intn(maxWidth-minX) + minX,
+		y: rand.Intn(maxHeight-minY) + minY,
 	}
 }
 
-func (a *Apple) updateApplePosition(isAppleEatan bool, maxWidth, maxHeight int) {
-	if isAppleEatan {
-		a.position = newApplePosition(maxWidth, maxHeight)
-		a.eatan = !isAppleEatan
-	}
+func (a *Apple) updateApplePosition(maxWidth, maxHeight, boardOffsetX, boardOffsetY int) {
+	a.position = newApplePosition(maxWidth, maxHeight, boardOffsetX, boardOffsetY)
+	a.eatan = false
 }
 
 func (a *Apple) displayApple(s tcell.Screen, maxWidth, maxHeight int) {

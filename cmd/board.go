@@ -35,13 +35,18 @@ func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 	}
 }
 
-func (b *Board) DisplayScreenToSmall(s tcell.Screen, currentW, currentH int) {
+func (b *Board) displayScreenToSmall(s tcell.Screen, currentW, currentH int) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorIndianRed.TrueColor()).Background(tcell.Color(tcell.ColorBlack.TrueColor()))
 	displayText := fmt.Sprintf("Current Screen size too small, requird size: %dw x %dh", b.w, b.h)
 	currentSize := fmt.Sprintf("current Size: %dw x %dh", currentW, currentH)
 
 	emitStr(s, (currentW-len(displayText))/2, currentH/2, style, displayText)
 	emitStr(s, (currentW-len(currentSize))/2, currentH/2+1, tcell.StyleDefault, currentSize)
+}
+
+func (b *Board) displayScore(s tcell.Screen, score int) {
+	scoreText := fmt.Sprintf("Score: %d", score)
+	emitStr(s, (b.w - len(scoreText) - 2), 0, tcell.StyleDefault, scoreText)
 }
 
 func (b *Board) displayBoard(s tcell.Screen) {

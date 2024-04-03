@@ -21,6 +21,7 @@ type Game struct {
 	snake    *Snake
 	board    *Board
 	apple    *Apple
+	score    int
 	screen   tcell.Screen
 	tickRate int
 	state    State
@@ -57,8 +58,9 @@ func NewGame(boardHeight, boardWidth, boardOffsety, boardOffsetx int) *Game {
 		screen:   screen,
 		snake:    snake,
 		board:    NewBoard(boardHeight, boardWidth, boardOffsety, boardOffsetx),
-		apple:    newApple(boardWidth, boardHeight),
-		tickRate: 10,
+		apple:    newApple(boardWidth, boardHeight, boardOffsetx, boardOffsety),
+		score:    0,
+		tickRate: 15,
 		state:    START,
 	}
 }
@@ -67,7 +69,7 @@ func (g *Game) Output() {
 	w, h := g.screen.Size()
 
 	if w < g.board.w || h < g.board.h {
-		g.board.DisplayScreenToSmall(g.screen, w, h)
+		g.board.displayScreenToSmall(g.screen, w, h)
 	} else {
 		switch g.state {
 		case START:
@@ -105,12 +107,16 @@ func (g *Game) StartScreen() {
 func (g *Game) RunningScreen() {
 	g.board.displayBoard(g.screen)
 	g.apple.displayApple(g.screen, g.board.w, g.board.h)
+	g.snake.checkSnakeDeath(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
 	isAppleEatan := g.snake.checkSnakeAteApple(g.apple.position)
-	g.apple.updateApplePosition(isAppleEatan, g.board.w, g.board.h)
-	g.snake.checkSnakeDeath(g.board.w, g.board.h)
 	if g.snake.status == ALIVE {
 		g.snake.updateSnakePositionAndGrow(g.snake.currentDirection, isAppleEatan)
+		if isAppleEatan {
+			g.apple.updateApplePosition(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
+			g.score += 10
+		}
 	}
+	g.board.displayScore(g.screen, g.score)
 	g.snake.displaySnake(g.screen)
 }
 
@@ -139,6 +145,8 @@ func (g *Game) Restart() {
 
 	g.state = RUNNING
 	g.snake = snake
+	g.score = 0
+	g.apple.position = newApplePosition(g.board.w, g.board.h, g.board.offsetx, g.board.offsety)
 }
 
 func (g *Game) gameLooop() {

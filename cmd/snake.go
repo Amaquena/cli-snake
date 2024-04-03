@@ -95,11 +95,11 @@ func (s *Snake) displaySnake(scr tcell.Screen) {
 	}
 }
 
-func (s *Snake) checkSnakeDeath(boardW, boardH int) {
+func (s *Snake) checkSnakeDeath(boardW, boardH, boardOffsetX, boardOffsetY int) {
 	pos := s.head.position
 
 	// check if snake touches the edeges of the board
-	if pos.x == boardW || pos.x == 0 || pos.y == boardH || pos.y == 0 {
+	if pos.x == boardW || pos.x == 0+boardOffsetX || pos.y == boardH || pos.y == 0+boardOffsetY {
 		s.status = DEAD
 	}
 
