@@ -3,7 +3,7 @@ vendor:
 	go mod vendor
 
 run:
-	go run ./cmd/ ...
+	go run ./...
 
 build:
-	go build -o clisnake ./cmd
+	go build -o clisnake
