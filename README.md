@@ -9,7 +9,7 @@ A simple snake clone written in Go.
 ## Run from source
 
 1. Clone the repo
-2. Run `make tidy`
+2. Run `make vendor`
 3. Run `make run`
 
 ## Run from binary
