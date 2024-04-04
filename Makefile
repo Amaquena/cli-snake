@@ -4,3 +4,6 @@ vendor:
 
 run:
 	go run ./cmd/ ...
+
+build:
+	go build -o clisnake ./cmd

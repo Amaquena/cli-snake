@@ -1,4 +1,4 @@
-module github.com/cli-snake
+module github.com/Amaquena/cli-snake
 
 go 1.21.1
 
